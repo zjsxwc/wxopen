@@ -14,7 +14,7 @@ use EasyWeChat\Foundation\Application;
 $options = [
     'debug'  => true,
     'app_id' => 'wx85b3b4769193943c',
-    'secret' => 'A3c35618954c50d5744f1178cdf10e53',
+    'secret' => 'a3c35618954c50d5744f1178cdf10e53',
     'token'  => 'wangchaowxopen',
     // 'aes_key' => null, // 可选
     'log' => [
