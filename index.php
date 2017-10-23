@@ -30,10 +30,41 @@ $userService = $app->user;
 $menuService = $app->menu;
 
 $app->server->setMessageHandler(function ($message) use ($userService, $menuService) {
+
+    $buttons = [
+        [
+            "type" => "click",
+            "name" => "按钮1",
+            "key"  => "click-1"
+        ],
+        [
+            "name"       => "菜单",
+            "sub_button" => [
+                [
+                    "type" => "view",
+                    "name" => "搜索",
+                    "url"  => "http://www.soso.com/"
+                ],
+                [
+                    "type" => "view",
+                    "name" => "视频",
+                    "url"  => "http://v.qq.com/"
+                ],
+            ],
+        ],
+    ];
+
     /** @var \EasyWeChat\Support\Collection $message */
     if ($message->MsgType == 'event') {
         if ($message->Event == 'subscribe') {
+            $menuService->add($buttons);
             return "您好！欢迎关注我!";
+        }
+
+        if  ($message->Event == 'CLICK') {
+            if ($message->EventKey == 'click-1') {
+                return "你点了按钮1";
+            }
         }
 
         return json_encode($message);
@@ -59,33 +90,6 @@ $app->server->setMessageHandler(function ($message) use ($userService, $menuServ
             }
 
             if (!$menus) {
-                $buttons = [
-                    [
-                        "type" => "click",
-                        "name" => "今日歌曲",
-                        "key"  => "V1001_TODAY_MUSIC"
-                    ],
-                    [
-                        "name"       => "菜单",
-                        "sub_button" => [
-                            [
-                                "type" => "view",
-                                "name" => "搜索",
-                                "url"  => "http://www.soso.com/"
-                            ],
-                            [
-                                "type" => "view",
-                                "name" => "视频",
-                                "url"  => "http://v.qq.com/"
-                            ],
-                            [
-                                "type" => "click",
-                                "name" => "赞一下我们",
-                                "key" => "V1001_GOOD"
-                            ],
-                        ],
-                    ],
-                ];
                 $menuService->add($buttons);
             }
             return json_encode($menus);
