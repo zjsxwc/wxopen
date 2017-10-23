@@ -50,9 +50,16 @@ $app->server->setMessageHandler(function ($message) use ($userService, $menuServ
                     "name" => "视频",
                     "url"  => "http://v.qq.com/"
                 ],
+                [
+                    "type" => "click",
+                    "name" => "你的信息",
+                    "url"  => "click-user-info"
+                ],
             ],
         ],
     ];
+
+
 
     /** @var \EasyWeChat\Support\Collection $message */
     if ($message->MsgType == 'event') {
@@ -64,6 +71,11 @@ $app->server->setMessageHandler(function ($message) use ($userService, $menuServ
         if  ($message->Event == 'CLICK') {
             if ($message->EventKey == 'click-1') {
                 return "你点了按钮1";
+            }
+            if ($message->EventKey == 'click-user-info') {
+                $userOpenId = $message->FromUserName;
+                $userInfo = $userService->get($userOpenId);
+                return "你的信息 " . $userInfo['nickname'] . $userInfo['city'] . $userInfo["headimgurl"];
             }
         }
 
