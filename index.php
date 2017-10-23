@@ -44,13 +44,46 @@ $app->server->setMessageHandler(function ($message) use ($userService, $menuServ
         }
 
         if ($message->Content == "获取菜单") {
+            $menus = [];
             try {
                 $menus = $menuService->all();
-                return json_encode($menus);
             } catch (\Exception $e) {
-                return $e->getMessage();
+                //not exist menus
             }
 
+            if (!$menus) {
+                $buttons = [
+                    [
+                        "type" => "click",
+                        "name" => "今日歌曲",
+                        "key"  => "V1001_TODAY_MUSIC"
+                    ],
+                    [
+                        "name"       => "菜单",
+                        "sub_button" => [
+                            [
+                                "type" => "view",
+                                "name" => "搜索",
+                                "url"  => "http://www.soso.com/"
+                            ],
+                            [
+                                "type" => "view",
+                                "name" => "视频",
+                                "url"  => "http://v.qq.com/"
+                            ],
+                            [
+                                "type" => "click",
+                                "name" => "赞一下我们",
+                                "key" => "V1001_GOOD"
+                            ],
+                        ],
+                    ],
+                ];
+                $menuService->add($buttons);
+            }
+
+
+            return json_encode($menus);
         }
 
         return "收到消息 " . $message->Content;
