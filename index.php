@@ -26,8 +26,10 @@ $options = [
 $app = new Application($options);
 /** @var \EasyWeChat\User\User $userService */
 $userService = $app->user;
+/** @var \EasyWeChat\Menu\Menu $menuService */
+$menuService = $app->menu;
 
-$app->server->setMessageHandler(function ($message) use ($userService) {
+$app->server->setMessageHandler(function ($message) use ($userService, $menuService) {
     if ($message->MsgType == 'event') {
         if ($message->Event == 'subscribe') {
             return "您好！欢迎关注我!";
@@ -38,7 +40,12 @@ $app->server->setMessageHandler(function ($message) use ($userService) {
         if ($message->Content == "我的信息") {
             $userOpenId = $message->FromUserName;
             $userInfo = $userService->get($userOpenId);
-            return "你的信息 " . $userInfo['nickname'];
+            return "你的信息 " . $userInfo['nickname'] . $userInfo['city'] . $userInfo["headimgurl"];
+        }
+
+        if ($message->Content == "获取菜单") {
+            $menus = $menuService->all();
+            return json_encode($menus);
         }
 
         return "收到消息 " . $message->Content;
