@@ -27,7 +27,17 @@ $app = new Application($options);
 
 
 $app->server->setMessageHandler(function ($message) {
-    return "您好！欢迎关注我!";
+    if ($message->MsgType == 'event') {
+        if ($message->Event == 'subscribe') {
+            return "您好！欢迎关注我!";
+        }
+    }
+
+    if ($message->MsgType == 'text') {
+        return "收到消息 " . $message->Content;
+    }
+
+    return "没有这种消息的处理方式";
 });
 
 
