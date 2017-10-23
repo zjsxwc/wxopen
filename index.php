@@ -44,8 +44,13 @@ $app->server->setMessageHandler(function ($message) use ($userService, $menuServ
         }
 
         if ($message->Content == "获取菜单") {
-            $menus = $menuService->all();
-            return json_encode($menus);
+            try {
+                $menus = $menuService->all();
+                return json_encode($menus);
+            } catch (\Exception $e) {
+                return $e->getMessage();
+            }
+
         }
 
         return "收到消息 " . $message->Content;
