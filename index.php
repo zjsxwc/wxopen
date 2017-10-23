@@ -24,9 +24,10 @@ $options = [
     //...
 ];
 $app = new Application($options);
+/** @var \EasyWeChat\User\User $userService */
+$userService = $app->user;
 
-
-$app->server->setMessageHandler(function ($message) {
+$app->server->setMessageHandler(function ($message) use ($userService) {
     if ($message->MsgType == 'event') {
         if ($message->Event == 'subscribe') {
             return "您好！欢迎关注我!";
@@ -34,6 +35,12 @@ $app->server->setMessageHandler(function ($message) {
     }
 
     if ($message->MsgType == 'text') {
+        if ($message->Content == "我的信息") {
+            $userOpenId = $message->FromUserName;
+            $userInfo = $userService->get($userOpenId);
+            return "你的信息 " . $userInfo['nickname'];
+        }
+
         return "收到消息 " . $message->Content;
     }
 
