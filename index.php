@@ -7,7 +7,7 @@
  */
 
 $postJson = json_encode($_POST);
-file_put_contents(__DIR__."/logs/pos.json", $postJson);
+file_put_contents(__DIR__."/logs/post.json", $postJson);
 
 include __DIR__ . '/vendor/autoload.php'; // 引入 composer 入口文件
 use EasyWeChat\Foundation\Application;
