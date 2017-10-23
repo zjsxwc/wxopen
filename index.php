@@ -30,10 +30,13 @@ $userService = $app->user;
 $menuService = $app->menu;
 
 $app->server->setMessageHandler(function ($message) use ($userService, $menuService) {
+    /** @var \EasyWeChat\Support\Collection $message */
     if ($message->MsgType == 'event') {
         if ($message->Event == 'subscribe') {
             return "您好！欢迎关注我!";
         }
+
+        return json_encode($message);
     }
 
     if ($message->MsgType == 'text') {
@@ -41,6 +44,10 @@ $app->server->setMessageHandler(function ($message) use ($userService, $menuServ
             $userOpenId = $message->FromUserName;
             $userInfo = $userService->get($userOpenId);
             return "你的信息 " . $userInfo['nickname'] . $userInfo['city'] . $userInfo["headimgurl"];
+        }
+        if ($message->Content == "清空菜单") {
+            $menuService->destroy();
+            return "OK";
         }
 
         if ($message->Content == "获取菜单") {
@@ -81,8 +88,6 @@ $app->server->setMessageHandler(function ($message) use ($userService, $menuServ
                 ];
                 $menuService->add($buttons);
             }
-
-
             return json_encode($menus);
         }
 
