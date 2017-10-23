@@ -53,7 +53,7 @@ $app->server->setMessageHandler(function ($message) use ($userService, $menuServ
                 [
                     "type" => "click",
                     "name" => "你的信息",
-                    "url"  => "click-user-info"
+                    "key"  => "click-user-info"
                 ],
             ],
         ],
